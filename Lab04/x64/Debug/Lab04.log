@@ -1,0 +1,17 @@
+﻿  pieceBishop.cpp
+  pieceKing.cpp
+  pieceKnight.cpp
+  piecePawn.cpp
+  pieceQueen.cpp
+  pieceRook.cpp
+  test.cpp
+  testBishop.cpp
+  testBoard.cpp
+  testKing.cpp
+  testPawn.cpp
+  testQueen.cpp
+  testRook.cpp
+  Generating Code...
+C:\Users\Roger\Desktop\cse231\231.04.Lab\piece.h(67,1): warning C4172: returning address of local variable or temporary 
+C:\Users\Roger\Desktop\cse231\231.04.Lab\piece.h(67,1): warning C4172: returning address of local variable or temporary 
+  Lab04.vcxproj -> C:\Users\Roger\Desktop\cse231\231.04.Lab\x64\Debug\Lab04.exe
