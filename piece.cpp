@@ -1,6 +1,6 @@
 /***********************************************************************
  * Source File:
- *    PIECE 
+ *    PIECE
  * Author:
  *    Jessen Forbush and Roger Galan
  * Summary:
@@ -21,7 +21,7 @@ using namespace std;
 /************************************************
  * PIECE : ASSIGN
  ***********************************************/
-const Piece & Piece::operator = (const Piece & rhs)
+const Piece& Piece::operator = (const Piece& rhs)
 {
    // Check for self-assignment
    if (this == &rhs)
@@ -37,11 +37,72 @@ const Piece & Piece::operator = (const Piece & rhs)
    return *this;
 }
 
-/************************************************
- * PIECE : GET MOVES
- * Iterate through the moves decorator to allow a piece to move
- ***********************************************/
-void Piece::getMoves(set <Move> & movesSet, const Board & board) const
+/***************************************************
+* PIECE : GEN MOVES SLIDE
+***************************************************/
+set<Move> Piece::getMovesSlide(const Board& board, const Delta deltas[], int numDelta) const
 {
+   set <Move> moves;
+   for (int i = 0; i < numDelta; i++)
+   {
+      Position posMove(position, deltas[i]);
+      while (posMove.isValid() && board[posMove] == SPACE)
+      {
+         Move move;
+         move.setSrc(position);
+         move.setDest(posMove);
+         move.setWhiteMove(isWhite());
+         moves.insert(move);
+
+         posMove += deltas[i];
+      }
+
+      if (posMove.isValid() && board[posMove].isWhite() != fWhite)
+      {
+         Move move;
+         move.setSrc(position);
+         move.setDest(posMove);
+         move.setWhiteMove(isWhite());
+         if (board[posMove] != SPACE)
+            move.setCapture(board[posMove].getType());
+         moves.insert(move);
+      }
+   }
+
+   return moves;
 }
 
+
+/***************************************************
+* PIECE : GEN MOVES NO SLIDE
+*               From a list of deltas, find all the
+*               possible moves
+***************************************************/
+set <Move> Piece::getMovesNoSlide(const Board& board,
+   const Delta deltas[],
+   int numDelta) const
+{
+   set<Move> moves;
+   for (int i = 0; i < numDelta; i++)
+   {
+      Position posMove(position, deltas[i]);
+      if (posMove.isValid())
+      {
+         const Piece& targetPiece = board[posMove];
+
+         // Can move to empty space or capture enemy piece
+         if (targetPiece == SPACE || targetPiece.isWhite() != fWhite)
+         {
+            Move move;
+            move.setSrc(getPosition());
+            move.setDest(posMove);
+            move.setWhiteMove(isWhite());
+            if (targetPiece != SPACE)
+               move.setCapture(targetPiece.getType());
+            moves.insert(move);
+         }
+      }
+
+   }
+   return moves;
+}

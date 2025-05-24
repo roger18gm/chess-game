@@ -20,6 +20,11 @@ using std::istream;
 class TestMove;
 class TestBoard;
 class TestKnight;
+class TestBishop;
+class TestRook;
+class TestQueen;
+class TestKing;
+class TestPawn;
 
 /***************************************************
  * MOVE
@@ -30,9 +35,14 @@ class Move
 public:
    enum MoveType { MOVE, ENPASSANT, CASTLE_KING, CASTLE_QUEEN, MOVE_ERROR };
 
-   friend TestMove;
-   friend TestBoard;
-   friend TestKnight;
+   friend class TestMove;
+   friend class TestBoard;
+   friend class TestKnight;
+   friend class TestBishop;
+   friend class TestRook;
+   friend class TestQueen;
+   friend class TestKing;
+   friend class TestPawn;
 
    // Constructors
    Move();
@@ -76,7 +86,7 @@ public:
       moveType = CASTLE_QUEEN;
    }
 
-   void setWhiteMove() { isWhite = true; }
+   void setWhiteMove(bool whiteOrBlack) { isWhite = whiteOrBlack; }
 
    // Move assignment
    void assign(Move& move);

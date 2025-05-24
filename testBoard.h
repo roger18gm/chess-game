@@ -27,7 +27,7 @@ public:
       construct_dummyBoard();
       construct_emptyBoard();
 
-      // move
+      //// move
       move_pawnSimple();
       move_pawnCapture();
       move_pawnDouble();

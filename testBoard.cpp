@@ -15,9 +15,6 @@
 #include <cassert>
 
 
-
-
-
  /***********************************************
   * CREATE DUMMY BOARD : Constructor for DummyBoard
   * Setup:

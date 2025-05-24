@@ -13,7 +13,7 @@
 #include <iostream>
 
  /***************************************************
- * PIECE DRAW
+ * ROOK: PIECE DRAW
  * Draw all the pieces.
  ***************************************************/
 void Rook::display(ogstream* pgout) const
@@ -27,9 +27,15 @@ void Rook::display(ogstream* pgout) const
 
 /**********************************************
  * ROOK : GET POSITIONS
- *********************************************/
+ *************************************************/
 void Rook::getMoves(set <Move>& moves, const Board& board) const
 {
+   const Delta delta[] =
+   {
+                { 0,  1 },
+      { -1,  0 },            { 1,  0 },
+                { 0, -1 }
+   };
 
-
+   moves = getMovesSlide(board, delta, sizeof(delta) / sizeof(delta[0]));
 }

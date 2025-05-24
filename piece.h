@@ -51,9 +51,9 @@ public:
    friend TestBoard;
    
    // constructors and stuff
-   Piece(const Position & pos, bool isWhite = true) : position(pos), fWhite(isWhite)  {}
-   Piece(int c, int r, bool isWhite = true) : position(c,r), fWhite(isWhite)          {}
-   Piece(const Piece & piece) : position(piece.position), fWhite(piece.fWhite)        {}
+   Piece(const Position & pos, bool isWhite = true) : position(pos), fWhite(isWhite), nMoves(0), lastMove(0)    {}
+   Piece(int c, int r, bool isWhite = true) : position(c,r), fWhite(isWhite), nMoves(0), lastMove(0) {}
+   Piece(const Piece& piece) { *this = piece; }
    virtual ~Piece()                                   {}
    virtual const Piece& operator = (const Piece& rhs);
 
@@ -61,11 +61,11 @@ public:
    virtual bool operator == (PieceType pt) const { return getType() == pt; }
    virtual bool operator != (PieceType pt) const { return getType() != pt; }
    virtual bool isWhite()                  const { return fWhite;         }
-   virtual bool isMoved()                  const { return nMoves >= 1;         }
+   virtual bool isMoved()                  const { return getNMoves() != 0;         }
    virtual int  getNMoves()                const { return nMoves;         }
-   virtual void decrementNMoves() { nMoves--; }
-   virtual const Position & getPosition()  const { return Position(position.getCol(), position.getRow());   }
-   virtual bool justMoved(int currentMove) const { return currentMove - lastMove == 1;         }
+   virtual void decrementNMoves() { nMoves-= (nMoves > 1) ? 2 : 0; }
+   virtual const Position & getPosition()  const { return position;   }
+   virtual bool justMoved(int currentMove) const { return currentMove - 1 == lastMove; }
 
    // setter
    virtual void setLastMove(int currentMove) 
@@ -77,7 +77,7 @@ public:
    // overwritten by the various pieces
    virtual PieceType getType()                                    const = 0;
    virtual void display(ogstream * pgout)                         const = 0;
-   void getMoves(set <Move> & moves, const Board & board) const;
+   void getMoves(set <Move>& moves, const Board& board) const {};
 
 protected:
 
@@ -85,6 +85,8 @@ protected:
    bool fWhite;                    // which team are you on?
    Position position;              // current position of this piece
    int  lastMove;                  // last time this piece moved
+   set <Move> getMovesSlide(const Board& board, const Delta deltas[], int numDelta) const;
+   set <Move> getMovesNoSlide(const Board& board, const Delta deltas[], int numDelta) const;
 };
 
 
@@ -96,8 +98,8 @@ protected:
 class PieceDerived : public Piece
 {
 public:
-   PieceDerived(const Position& pos, bool isWhite) : Piece(9, 9) { }
-   PieceDerived(int c, int r, bool isWhite) : Piece(9, 9)        { }
+   PieceDerived(const Position& pos, bool isWhite) : Piece(pos, isWhite) { }
+   PieceDerived(int c, int r, bool isWhite) : Piece(c, r, isWhite)        { }
    ~PieceDerived()                                                       { }
    PieceType getType()            const     { return SPACE;                }
    void display(ogstream* pgout)  const     { assert(false);               }
@@ -213,7 +215,9 @@ public:
    White(PieceType pt) : PieceDummy(), pt(pt) {}
    bool isWhite() const { return true; }
    PieceType getType() const { return pt; }
+   int  getNMoves()                const { return nMoves; }
    void getMoves(set <Move>& moves, const Board& board) const { }
+   virtual bool justMoved(int currentMove) const { return currentMove - 1 == lastMove; }
 };
 
 class Black : public PieceDummy
@@ -224,7 +228,9 @@ public:
    Black(PieceType pt) : PieceDummy(), pt(pt) {}
    bool isWhite() const { return false; }
    PieceType getType() const { return pt; }
+   int  getNMoves()                const { return nMoves; }
    void getMoves(set <Move>& moves, const Board& board) const { }
+   virtual bool justMoved(int currentMove) const { return currentMove - 1 == lastMove; }
 };
 
 

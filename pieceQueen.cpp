@@ -24,12 +24,17 @@ void Queen::display(ogstream* pgout) const
    }
 }
 
-
 /**********************************************
  * QUEEN : GET POSITIONS
  *********************************************/
 void Queen::getMoves(set <Move>& moves, const Board& board) const
 {
+   const Delta delta[] =
+   {
+      { -1,  1 }, { 0,  1 }, { 1,  1 },
+      { -1,  0 },            { 1,  0 },
+      { -1, -1 }, { 0, -1 }, { 1, -1 }
+   };
 
-
+   moves = getMovesSlide(board, delta, sizeof(delta) / sizeof(delta[0]));
 }

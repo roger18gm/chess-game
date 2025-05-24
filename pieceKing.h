@@ -13,7 +13,7 @@
 
  /***************************************************
   * KING
-  * The king, aka the ""
+  * The king, the most important piece
   ***************************************************/
 class King : public Piece
 {
@@ -24,4 +24,9 @@ public:
    PieceType getType()            const { return KING; }
    void getMoves(set <Move>& moves, const Board& board) const;
    void display(ogstream* pgout)  const;
+
+private:
+   void addCastlingMoves(set<Move>& moves, const Board& board) const;
+   bool canCastleKingSide(const Board& board) const;
+   bool canCastleQueenSide(const Board& board) const;
 };

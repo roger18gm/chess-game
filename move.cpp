@@ -62,8 +62,6 @@ void Move::read(const string& str)
    // Default to a simple move
    moveType = MOVE;
 
-   capture = SPACE;
-
    // Process special move indicators (5th character, if present)
    if (str.length() >= 5)
       processSpecialMoveChar(str[4]);

@@ -66,7 +66,6 @@ const Piece& Board::operator [] (const Position& pos) const
 
 Piece& Board::operator [] (const Position& pos)
 {
-   //assert(pos.isValid());
    Piece* p = board[pos.getCol()][pos.getRow()];
    return *p;
 }
@@ -145,8 +144,6 @@ void Board::assertBoard()
 }
 
 
-
-
 /**********************************************
  * BOARD : MOVE
  *         Execute a move according to the contained instructions
@@ -174,6 +171,13 @@ void Board::move(const Move& move)
    // Update the move counter of the piece
    piece->setLastMove(numMoves);
 
+   // Clean up the destination piece if it exists and isn't a space
+   if (board[destCol][destRow] != nullptr &&
+      board[destCol][destRow]->getType() != SPACE)
+   {
+      delete board[destCol][destRow];
+   }
+
    // Move the piece to the destination
    board[destCol][destRow] = piece;
 
@@ -183,8 +187,6 @@ void Board::move(const Move& move)
    // Increment move counter
    numMoves++;
 }
-
-
 
 /**********************************************
  * BOARD EMPTY
@@ -200,5 +202,3 @@ BoardEmpty::~BoardEmpty()
 {
    delete pSpace;
 }
-
-
